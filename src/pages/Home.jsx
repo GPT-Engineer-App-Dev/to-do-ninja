@@ -3,14 +3,17 @@ import { Container, Heading, VStack } from "@chakra-ui/react";
 import CreateTask from "../components/CreateTask";
 import TodoList from "../components/TodoList";
 
+const SUPABASE_URL = "https://jjfebbwwtcxyhvnkuyrh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec";
+
 const Home = () => {
   const [tasks, setTasks] = useState([]);
 
   const fetchTasks = useCallback(async () => {
-    const response = await fetch("https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/tasks", {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
       headers: {
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
     });
     const data = await response.json();
@@ -18,12 +21,12 @@ const Home = () => {
   }, []);
 
   const createTask = async (description) => {
-    const response = await fetch("https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/tasks", {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ description, completed: false }),
     });
@@ -32,12 +35,12 @@ const Home = () => {
   };
 
   const updateTask = async (id, completed) => {
-    await fetch(`https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/tasks?id=eq.${id}`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ completed }),
     });
@@ -47,11 +50,11 @@ const Home = () => {
   };
 
   const removeTask = async (id) => {
-    await fetch(`https://jjfebbwwtcxyhvnkuyrh.supabase.co/rest/v1/tasks?id=eq.${id}`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/tasks?id=eq.${id}`, {
       method: "DELETE",
       headers: {
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
     });
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
