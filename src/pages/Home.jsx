@@ -3,8 +3,8 @@ import { Container, Heading, VStack } from "@chakra-ui/react";
 import CreateTask from "../components/CreateTask";
 import TodoList from "../components/TodoList";
 
-const SUPABASE_URL = "https://jjfebbwwtcxyhvnkuyrh.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZmViYnd3dGN4eWh2bmt1eXJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY0NTgyMzMsImV4cCI6MjAzMjAzNDIzM30.46syqx3sHX-PQMribS6Vt0RLLUY7w295JHO61yZ-fec";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -21,7 +21,7 @@ const Home = () => {
   }, []);
 
   const createTask = async (description) => {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/tasks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,8 +30,7 @@ const Home = () => {
       },
       body: JSON.stringify({ description, completed: false }),
     });
-    const newTask = await response.json();
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+    fetchTasks(); // Refresh the list of tasks
   };
 
   const updateTask = async (id, completed) => {
@@ -44,9 +43,7 @@ const Home = () => {
       },
       body: JSON.stringify({ completed }),
     });
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === id ? { ...task, completed } : task))
-    );
+    fetchTasks(); // Refresh the list of tasks
   };
 
   const removeTask = async (id) => {
@@ -57,7 +54,7 @@ const Home = () => {
         Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       },
     });
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    fetchTasks(); // Refresh the list of tasks
   };
 
   useEffect(() => {
